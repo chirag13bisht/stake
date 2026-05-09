@@ -1,0 +1,1202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Stake — Online Casino & Sportsbook</title>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#0d1f2d;
+  --bg2:#1a2c38;
+  --bg3:#243442;
+  --bg4:#2f4454;
+  --blue:#1479f2;
+  --blue2:#1060c9;
+  --green:#00c74d;
+  --green2:#00e55a;
+  --teal:#00c2a8;
+  --text:#ffffff;
+  --text2:#b1bad3;
+  --text3:#6b7f8e;
+  --border:rgba(255,255,255,0.08);
+  --border2:rgba(255,255,255,0.12);
+  --nav-h:60px;
+  --bot-h:60px;
+  --radius:8px;
+  --radius-lg:12px;
+}
+html,body{
+  width:100%; max-width:430px; margin:0 auto;
+  height:100%; background:#000; overflow:hidden;
+  font-family:'Inter',sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+body{position:relative;}
+
+/* ─── SPLASH ─── */
+#splash{
+  position:fixed;inset:0;z-index:9999;
+  background:var(--bg);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  transition:opacity .5s;
+}
+#splash.hide{opacity:0;pointer-events:none;}
+.splash-logo{
+  font-family:'Pacifico',cursive;
+  font-size:42px;color:rgba(255,255,255,0.2);
+  position:relative;
+}
+.splash-logo::after{
+  content:'Stake';
+  position:absolute;left:0;top:0;
+  color:#fff;
+  clip-path:inset(0 100% 0 0);
+  animation:reveal 1.2s ease .3s forwards;
+}
+@keyframes reveal{to{clip-path:inset(0 0% 0 0);}}
+.splash-spinner{
+  width:32px;height:32px;
+  border:3px solid rgba(255,255,255,0.1);
+  border-top-color:#fff;
+  border-radius:50%;
+  animation:spin 0.8s linear infinite;
+  margin-bottom:24px;
+}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* ─── MAIN APP ─── */
+#app{
+  width:100%;height:100dvh;
+  background:var(--bg);
+  display:flex;flex-direction:column;
+  overflow:hidden;
+}
+
+/* ─── HEADER ─── */
+header{
+  height:var(--nav-h);
+  background:var(--bg);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 16px;
+  flex-shrink:0;
+  position:relative;z-index:10;
+}
+.logo{
+  font-family:'Pacifico',cursive;
+  font-size:28px;color:#fff;
+  text-decoration:none;
+}
+.header-btns{display:flex;gap:8px;}
+.btn-login{
+  background:var(--bg3);
+  border:none;color:var(--text);
+  font-size:14px;font-weight:500;
+  padding:9px 18px;border-radius:var(--radius);
+  cursor:pointer;font-family:'Inter',sans-serif;
+  transition:background .15s;
+}
+.btn-login:hover{background:var(--bg4);}
+.btn-register{
+  background:var(--blue);
+  border:none;color:#fff;
+  font-size:14px;font-weight:600;
+  padding:9px 18px;border-radius:var(--radius);
+  cursor:pointer;font-family:'Inter',sans-serif;
+  transition:background .15s;
+}
+.btn-register:hover{background:var(--blue2);}
+
+/* ─── SCREEN CONTENT ─── */
+.screen-wrap{
+  flex:1;overflow-y:auto;overflow-x:hidden;
+  -webkit-overflow-scrolling:touch;
+}
+.screen{display:none;}
+.screen.active{display:block;}
+
+/* ─── BOTTOM NAV ─── */
+.bottom-nav{
+  height:var(--bot-h);
+  background:var(--bg2);
+  border-top:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-around;
+  flex-shrink:0;
+  position:relative;z-index:10;
+}
+.nav-item{
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  cursor:pointer;padding:6px 12px;
+  transition:color .15s;
+  color:var(--text3);
+  font-size:11px;font-weight:500;
+  background:none;border:none;font-family:'Inter',sans-serif;
+  -webkit-tap-highlight-color:transparent;
+}
+.nav-item svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;}
+.nav-item.active{color:#fff;}
+.nav-item.active svg{stroke:#fff;}
+
+/* ─── HOME SCREEN ─── */
+.home-hero{
+  padding:28px 16px 0;
+  text-align:center;
+}
+.home-hero h1{
+  font-size:26px;font-weight:700;
+  line-height:1.25;color:#fff;
+  margin-bottom:20px;
+}
+.btn-register-full{
+  display:block;width:100%;
+  background:var(--blue);
+  border:none;color:#fff;
+  font-size:16px;font-weight:600;
+  padding:15px;border-radius:var(--radius);
+  cursor:pointer;font-family:'Inter',sans-serif;
+  margin-bottom:14px;
+  transition:background .15s;
+}
+.btn-register-full:hover{background:var(--blue2);}
+.or-signup{
+  font-size:13px;color:var(--text2);
+  margin-bottom:12px;
+}
+.social-btns{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:8px;margin-bottom:24px;
+}
+.social-btn{
+  background:var(--bg3);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:12px;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:background .15s;
+  font-size:20px;
+}
+.social-btn:hover{background:var(--bg4);}
+
+.category-cards{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:10px;margin:0 16px 20px;
+}
+.cat-card{
+  border-radius:var(--radius-lg);
+  overflow:hidden;
+  position:relative;cursor:pointer;
+  aspect-ratio:1.6/1;
+  display:flex;flex-direction:column;justify-content:flex-end;
+  padding:10px 12px;
+  transition:transform .15s;
+}
+.cat-card:hover{transform:scale(1.02);}
+.cat-card.casino{background:linear-gradient(160deg,#1b4fd8,#0a2d7a);}
+.cat-card.sports{background:linear-gradient(160deg,#0d6b3a,#073d22);}
+.cat-card-img{
+  position:absolute;top:0;right:0;bottom:0;
+  width:60%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:52px;
+  pointer-events:none;
+}
+.cat-card-title{
+  font-size:15px;font-weight:700;color:#fff;
+  position:relative;z-index:1;
+}
+.cat-card-count{
+  font-size:12px;color:rgba(255,255,255,0.7);
+  display:flex;align-items:center;gap:5px;
+  position:relative;z-index:1;
+  margin-top:2px;
+}
+.live-dot{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--green2);
+  animation:blink 1.5s infinite;
+}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.4;}}
+
+.search-bar{
+  margin:0 16px 20px;
+  background:var(--bg3);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  display:flex;align-items:center;gap:10px;
+  padding:12px 14px;
+}
+.search-bar input{
+  background:none;border:none;outline:none;
+  color:var(--text2);font-size:14px;width:100%;
+  font-family:'Inter',sans-serif;
+}
+.search-bar input::placeholder{color:var(--text3);}
+.search-icon{color:var(--text3);flex-shrink:0;}
+.search-icon svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;}
+
+.section-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 16px;margin-bottom:12px;
+}
+.section-title{
+  display:flex;align-items:center;gap:8px;
+  font-size:16px;font-weight:700;color:#fff;
+}
+.section-title svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2;}
+.view-all{
+  font-size:13px;color:var(--text2);
+  cursor:pointer;background:none;border:none;
+  font-family:'Inter',sans-serif;
+}
+.view-all:hover{color:#fff;}
+
+/* game card grid */
+.games-scroll{
+  display:flex;gap:10px;
+  padding:0 16px 4px;
+  overflow-x:auto;scrollbar-width:none;
+}
+.games-scroll::-webkit-scrollbar{display:none;}
+.game-card{
+  flex-shrink:0;
+  width:100px;border-radius:var(--radius);
+  overflow:hidden;cursor:pointer;
+  transition:transform .15s;
+  position:relative;
+}
+.game-card:hover{transform:scale(1.04);}
+.game-thumb{
+  width:100px;height:100px;
+  border-radius:var(--radius);
+  display:flex;align-items:center;justify-content:center;
+  font-size:36px;
+  position:relative;
+  overflow:hidden;
+}
+.game-card-name{
+  font-size:11px;font-weight:600;color:#fff;
+  text-align:center;padding:5px 4px;
+  background:var(--bg2);
+  text-transform:uppercase;letter-spacing:.5px;
+}
+
+/* ─── BROWSE SCREEN ─── */
+.browse-top{
+  display:flex;align-items:center;gap:10px;
+  padding:12px 16px;border-bottom:1px solid var(--border);
+}
+.browse-dropdown{
+  display:flex;align-items:center;gap:6px;
+  background:var(--bg3);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:10px 14px;
+  font-size:14px;font-weight:600;color:#fff;
+  cursor:pointer;white-space:nowrap;
+}
+.browse-dropdown svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;}
+.browse-search{
+  flex:1;background:var(--bg3);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  display:flex;align-items:center;gap:8px;
+  padding:10px 14px;
+}
+.browse-search input{
+  background:none;border:none;outline:none;
+  font-size:14px;color:var(--text2);width:100%;
+  font-family:'Inter',sans-serif;
+}
+.browse-search input::placeholder{color:var(--text3);}
+.browse-search svg{width:16px;height:16px;stroke:var(--text3);fill:none;stroke-width:2;flex-shrink:0;}
+
+.tab-switcher{
+  display:flex;margin:12px 16px;
+  background:var(--bg3);
+  border-radius:var(--radius);
+  padding:3px;
+  gap:3px;
+}
+.tab-btn{
+  flex:1;padding:10px;border-radius:6px;
+  font-size:14px;font-weight:600;
+  border:none;cursor:pointer;
+  font-family:'Inter',sans-serif;
+  transition:background .15s,color .15s;
+}
+.tab-btn.active{background:var(--green);color:#000;}
+.tab-btn:not(.active){background:none;color:var(--text2);}
+
+.menu-list{padding:0 0 12px;}
+.menu-divider{
+  height:1px;background:var(--border);
+  margin:8px 16px;
+}
+.menu-label{
+  font-size:12px;font-weight:600;color:var(--text3);
+  text-transform:uppercase;letter-spacing:1px;
+  padding:12px 16px 4px;
+}
+.menu-item{
+  display:flex;align-items:center;gap:14px;
+  padding:13px 16px;cursor:pointer;
+  color:var(--text2);font-size:15px;font-weight:500;
+  transition:background .15s;
+}
+.menu-item:hover{background:rgba(255,255,255,0.04);}
+.menu-item svg{
+  width:20px;height:20px;
+  stroke:currentColor;fill:none;stroke-width:1.8;
+  flex-shrink:0;
+}
+
+/* ─── CASINO SCREEN ─── */
+.featured-banner{
+  margin:14px 16px;
+  background:var(--bg3);
+  border-radius:var(--radius-lg);
+  padding:16px;
+  display:flex;align-items:center;justify-content:space-between;
+  position:relative;overflow:hidden;
+}
+.featured-tag{
+  display:inline-block;
+  background:var(--teal);
+  color:#000;font-size:11px;font-weight:700;
+  padding:3px 10px;border-radius:100px;
+  margin-bottom:6px;
+  text-transform:uppercase;letter-spacing:.5px;
+}
+.featured-title{font-size:18px;font-weight:700;color:#fff;margin-bottom:3px;}
+.featured-sub{font-size:12px;color:var(--text2);margin-bottom:12px;}
+.btn-play{
+  background:var(--bg4);
+  border:1px solid var(--border2);
+  color:#fff;font-size:13px;font-weight:600;
+  padding:9px 18px;border-radius:var(--radius);
+  cursor:pointer;font-family:'Inter',sans-serif;
+  transition:background .15s;
+  display:inline-block;
+}
+.btn-play:hover{background:rgba(255,255,255,0.12);}
+.featured-img{
+  font-size:72px;line-height:1;flex-shrink:0;
+}
+
+.horizontal-tabs{
+  display:flex;gap:0;
+  padding:0 16px;margin-bottom:16px;
+  border-bottom:1px solid var(--border);
+  overflow-x:auto;scrollbar-width:none;
+}
+.horizontal-tabs::-webkit-scrollbar{display:none;}
+.htab{
+  white-space:nowrap;
+  padding:10px 14px;
+  font-size:13px;font-weight:600;color:var(--text3);
+  border-bottom:2px solid transparent;
+  cursor:pointer;
+  display:flex;align-items:center;gap:6px;
+  transition:color .15s;
+  background:none;border-top:none;border-left:none;border-right:none;
+  font-family:'Inter',sans-serif;
+}
+.htab.active{color:#fff;border-bottom-color:#fff;}
+.htab:hover{color:var(--text2);}
+.htab svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.8;}
+
+/* originals section */
+.originals-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:8px;padding:0 16px 16px;
+}
+.orig-card{
+  border-radius:var(--radius);overflow:hidden;cursor:pointer;
+  transition:transform .15s;
+}
+.orig-card:hover{transform:scale(1.03);}
+.orig-thumb{
+  aspect-ratio:1;
+  display:flex;flex-direction:column;align-items:center;justify-content:flex-end;
+  padding-bottom:10px;font-size:40px;
+  position:relative;overflow:hidden;
+}
+.orig-name{
+  font-size:12px;font-weight:700;color:#fff;
+  text-transform:uppercase;letter-spacing:1px;
+  text-align:center;
+  padding:4px 6px;
+  background:rgba(0,0,0,0.5);
+  position:absolute;bottom:0;left:0;right:0;
+  font-size:11px;
+}
+.orig-sub{
+  font-size:9px;color:rgba(255,255,255,0.5);
+  text-transform:uppercase;letter-spacing:.5px;
+}
+
+/* ─── SPORTS SCREEN ─── */
+.sports-banner{
+  margin:14px 16px;
+  background:var(--bg3);
+  border-radius:var(--radius-lg);
+  padding:16px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.match-card{
+  margin:0 16px 10px;
+  background:var(--bg3);
+  border-radius:var(--radius-lg);
+  overflow:hidden;
+}
+.match-header{
+  display:flex;align-items:center;gap:8px;
+  padding:10px 14px;
+  border-bottom:1px solid var(--border);
+}
+.match-time{
+  background:var(--bg4);
+  font-size:11px;font-weight:600;color:var(--text2);
+  padding:3px 7px;border-radius:4px;
+}
+.match-tags{display:flex;gap:4px;flex:1;}
+.match-tag{
+  background:var(--bg4);
+  font-size:10px;color:var(--text3);
+  padding:3px 7px;border-radius:4px;font-weight:600;
+}
+.match-viewers{
+  display:flex;align-items:center;gap:4px;
+  font-size:12px;color:var(--text2);
+  margin-left:auto;
+}
+.match-viewers svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;}
+.match-body{padding:14px;}
+.match-teams{
+  display:flex;align-items:center;justify-content:center;
+  gap:10px;margin-bottom:10px;
+}
+.team{
+  display:flex;align-items:center;gap:8px;
+}
+.team-badge{
+  width:32px;height:32px;border-radius:50%;
+  background:var(--bg4);
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;
+}
+.team-name{font-size:14px;font-weight:700;color:#fff;}
+.vs{font-size:12px;color:var(--text3);font-weight:600;}
+.match-hot{
+  font-size:12px;color:var(--text2);
+  margin-bottom:10px;
+  display:flex;align-items:center;gap:4px;
+}
+.match-odds{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:6px;
+}
+.odds-btn{
+  background:var(--bg4);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:10px 8px;text-align:center;cursor:pointer;
+  transition:background .15s;
+}
+.odds-btn:hover{background:rgba(20,121,242,0.2);border-color:var(--blue);}
+.odds-label{font-size:12px;color:var(--text2);margin-bottom:2px;}
+.odds-val{font-size:15px;font-weight:700;color:var(--blue);}
+
+/* ─── BET SLIP ─── */
+.betslip-top{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 16px;border-bottom:1px solid var(--border);
+}
+.betslip-left{display:flex;align-items:center;gap:8px;}
+.betslip-left svg{width:20px;height:20px;stroke:var(--text2);fill:none;stroke-width:1.8;}
+.betslip-title{font-size:16px;font-weight:700;color:#fff;}
+.caret svg{width:14px;height:14px;stroke:var(--text3);fill:none;stroke-width:2;}
+.betslip-icons{display:flex;gap:12px;}
+.betslip-icons svg{width:20px;height:20px;stroke:var(--text2);fill:none;stroke-width:1.8;cursor:pointer;}
+.empty-state{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:80px 24px;gap:14px;
+}
+.empty-icon{font-size:80px;opacity:.5;}
+.empty-title{font-size:16px;color:var(--text2);font-weight:500;}
+.empty-sub{font-size:15px;font-weight:700;color:#fff;}
+.betslip-footer{
+  padding:16px;
+  border-top:1px solid var(--border);
+}
+.betslip-row{
+  display:flex;justify-content:space-between;
+  font-size:14px;color:var(--text2);margin-bottom:6px;
+}
+.betslip-row span:last-child{
+  color:#fff;font-weight:600;
+  display:flex;align-items:center;gap:6px;
+}
+.tron-badge{
+  width:20px;height:20px;border-radius:50%;
+  background:#e50019;
+  display:flex;align-items:center;justify-content:center;
+  font-size:10px;font-weight:700;color:#fff;
+}
+.btn-register-bet{
+  display:block;width:100%;
+  background:var(--blue);border:none;
+  color:#fff;font-size:16px;font-weight:700;
+  padding:16px;border-radius:var(--radius);
+  cursor:pointer;margin-top:14px;
+  font-family:'Inter',sans-serif;
+  transition:background .15s;
+}
+.btn-register-bet:hover{background:var(--blue2);}
+
+/* ─── CHAT ─── */
+.chat-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:12px 16px;border-bottom:1px solid var(--border);
+}
+.chat-region{
+  display:flex;align-items:center;gap:8px;
+  font-size:14px;font-weight:600;color:#fff;
+  cursor:pointer;
+}
+.chat-region svg{width:14px;height:14px;stroke:var(--text3);fill:none;stroke-width:2;}
+.chat-close svg{width:20px;height:20px;stroke:var(--text3);fill:none;stroke-width:2;cursor:pointer;}
+.chat-messages{
+  flex:1;overflow-y:auto;padding:12px 10px;
+  display:flex;flex-direction:column;gap:8px;
+  scrollbar-width:none;
+}
+.chat-messages::-webkit-scrollbar{display:none;}
+.chat-msg{
+  background:var(--bg3);
+  border-radius:var(--radius);
+  padding:10px 12px;
+  font-size:13px;line-height:1.5;
+  color:var(--text2);
+}
+.msg-author{
+  font-weight:700;color:#fff;margin-right:4px;
+  display:inline;
+}
+.msg-author.star::before{content:'☆ ';}
+.msg-mention{
+  background:rgba(20,121,242,0.2);
+  color:#6ab0ff;
+  padding:1px 5px;border-radius:4px;
+  font-size:12px;
+}
+.chat-input-area{
+  padding:10px 12px;
+  border-top:1px solid var(--border);
+  background:var(--bg2);
+}
+.chat-input-row{
+  display:flex;align-items:center;gap:8px;
+  background:var(--bg3);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:10px 12px;
+  margin-bottom:10px;
+}
+.chat-input-row input{
+  flex:1;background:none;border:none;outline:none;
+  color:#fff;font-size:14px;font-family:'Inter',sans-serif;
+}
+.chat-input-row input::placeholder{color:var(--text3);}
+.emoji-btn{font-size:20px;cursor:pointer;flex-shrink:0;}
+.chat-footer{
+  display:flex;align-items:center;justify-content:space-between;
+}
+.online-count{
+  display:flex;align-items:center;gap:6px;
+  font-size:12px;color:var(--text2);
+}
+.online-dot{
+  width:8px;height:8px;border-radius:50%;
+  background:var(--green2);
+}
+.char-count{font-size:12px;color:var(--text3);}
+.chat-actions{display:flex;gap:6px;align-items:center;}
+.chat-bet-btn{
+  background:var(--bg4);border:1px solid var(--border);
+  border-radius:var(--radius);padding:8px 10px;
+  cursor:pointer;
+}
+.chat-bet-btn svg{width:18px;height:18px;stroke:var(--text2);fill:none;stroke-width:1.8;}
+.btn-send{
+  background:var(--blue);border:none;
+  color:#fff;font-size:14px;font-weight:700;
+  padding:9px 18px;border-radius:var(--radius);
+  cursor:pointer;font-family:'Inter',sans-serif;
+}
+
+/* chat screen layout */
+#screen-chat{
+  display:none;flex-direction:column;
+  height:100%;
+}
+#screen-chat.active{display:flex;}
+
+/* ─── NOTIFICATION TOAST ─── */
+.toast{
+  position:fixed;bottom:76px;left:50%;
+  transform:translateX(-50%) translateY(10px);
+  background:var(--bg4);
+  border:1px solid var(--border2);
+  border-radius:var(--radius);
+  padding:10px 18px;font-size:13px;
+  color:#fff;opacity:0;
+  transition:all .25s;
+  z-index:1000;white-space:nowrap;
+  pointer-events:none;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* scrollable screens */
+#screen-home, #screen-casino, #screen-sports, #screen-bets, #screen-browse {
+  height: 100%;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+#screen-home::-webkit-scrollbar,
+#screen-casino::-webkit-scrollbar,
+#screen-sports::-webkit-scrollbar,
+#screen-bets::-webkit-scrollbar,
+#screen-browse::-webkit-scrollbar { display: none; }
+</style>
+</head>
+<body>
+
+<!-- SPLASH -->
+<div id="splash">
+  <div class="splash-spinner"></div>
+  <div class="splash-logo">Stake</div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <!-- HEADER -->
+  <header>
+    <a href="#" class="logo">Stake</a>
+    <div class="header-btns">
+      <button class="btn-login" onclick="toast('Login coming soon!')">Login</button>
+      <button class="btn-register" onclick="toast('Register to get started!')">Register</button>
+    </div>
+  </header>
+
+  <!-- SCREENS -->
+  <div style="flex:1;overflow:hidden;position:relative;">
+
+    <!-- HOME -->
+    <div id="screen-home" class="screen active">
+      <div class="home-hero">
+        <h1>The World's Largest Online Casino and Sportsbook</h1>
+        <button class="btn-register-full" onclick="toast('Create your free account!')">Register</button>
+        <p class="or-signup">Or Sign Up With</p>
+        <div class="social-btns">
+          <div class="social-btn" onclick="toast('Continue with Google')">
+            <svg viewBox="0 0 24 24" width="22" height="22"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+          </div>
+          <div class="social-btn" onclick="toast('Continue with Facebook')">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="#1877F2"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+          </div>
+          <div class="social-btn" onclick="toast('Continue with Kick')">
+            <span style="background:#53fc18;border-radius:4px;padding:2px 6px;font-weight:900;font-size:14px;color:#000;font-family:sans-serif;">K</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="category-cards">
+        <div class="cat-card casino" onclick="switchTab('casino')">
+          <div class="cat-card-img">🎴🎲</div>
+          <div class="cat-card-title">Casino</div>
+          <div class="cat-card-count">
+            <div class="live-dot"></div>
+            105,243
+          </div>
+        </div>
+        <div class="cat-card sports" onclick="switchTab('sports')">
+          <div class="cat-card-img">⚽🏀</div>
+          <div class="cat-card-title">Sports</div>
+          <div class="cat-card-count">
+            <div class="live-dot"></div>
+            43,059
+          </div>
+        </div>
+      </div>
+
+      <div class="search-bar">
+        <div class="search-icon">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </div>
+        <input type="text" placeholder="Search your game or event" readonly onclick="toast('Search is available after login')">
+      </div>
+
+      <div class="section-header">
+        <div class="section-title">
+          <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          Trending Games
+        </div>
+        <button class="view-all" onclick="switchTab('casino')">View All</button>
+      </div>
+      <div class="games-scroll" style="margin-bottom:16px;">
+        <div class="game-card" onclick="toast('Login to play games')">
+          <div class="game-thumb" style="background:linear-gradient(135deg,#7b2d8b,#4a1f8f);">🎰</div>
+          <div class="game-card-name">Sweet Bonanza</div>
+        </div>
+        <div class="game-card" onclick="toast('Login to play games')">
+          <div class="game-thumb" style="background:linear-gradient(135deg,#1a4f8f,#0d2d5e);">🃏</div>
+          <div class="game-card-name">Blackjack</div>
+        </div>
+        <div class="game-card" onclick="toast('Login to play games')">
+          <div class="game-thumb" style="background:linear-gradient(135deg,#8f3a1a,#5e200d);">🎯</div>
+          <div class="game-card-name">Aviator</div>
+        </div>
+        <div class="game-card" onclick="toast('Login to play games')">
+          <div class="game-thumb" style="background:linear-gradient(135deg,#1a8f4a,#0d5e2d);">💎</div>
+          <div class="game-card-name">Mines</div>
+        </div>
+        <div class="game-card" onclick="toast('Login to play games')">
+          <div class="game-thumb" style="background:linear-gradient(135deg,#8f8f1a,#5e5e0d);">🎳</div>
+          <div class="game-card-name">Plinko</div>
+        </div>
+      </div>
+
+      <div class="section-header">
+        <div class="section-title">
+          🔥 Stake Originals
+        </div>
+        <button class="view-all" onclick="switchTab('casino')">View All</button>
+      </div>
+      <div class="games-scroll" style="margin-bottom:24px;">
+        <div class="game-card" onclick="toast('Login to play')">
+          <div class="game-thumb" style="background:linear-gradient(135deg,#6b29c7,#3d1580);">🎲</div>
+          <div class="game-card-name">DICE</div>
+        </div>
+        <div class="game-card" onclick="toast('Login to play')">
+          <div class="game-thumb" style="background:linear-gradient(135deg,#1e7a3e,#0d4a22);">💣</div>
+          <div class="game-card-name">MINES</div>
+        </div>
+        <div class="game-card" onclick="toast('Login to play')">
+          <div class="game-thumb" style="background:linear-gradient(135deg,#c77b29,#804a0d);">🎳</div>
+          <div class="game-card-name">PLINKO</div>
+        </div>
+        <div class="game-card" onclick="toast('Login to play')">
+          <div class="game-thumb" style="background:linear-gradient(135deg,#29a8c7,#0d6a80);">🚀</div>
+          <div class="game-card-name">CRASH</div>
+        </div>
+        <div class="game-card" onclick="toast('Login to play')">
+          <div class="game-thumb" style="background:linear-gradient(135deg,#c72980,#801550);">🃏</div>
+          <div class="game-card-name">HILO</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BROWSE -->
+    <div id="screen-browse" class="screen">
+      <div class="browse-top">
+        <div class="browse-dropdown">
+          Casino
+          <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="browse-search">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" placeholder="Search your game">
+        </div>
+      </div>
+      <div class="tab-switcher">
+        <button class="tab-btn active" onclick="this.classList.add('active');this.nextElementSibling.classList.remove('active')">Casino</button>
+        <button class="tab-btn" onclick="this.classList.add('active');this.previousElementSibling.classList.remove('active')">Sports</button>
+      </div>
+      <div class="menu-list">
+        <div class="menu-item"><svg viewBox="0 0 24 24"><polyline points="19 21 12 3 5 21"/><line x1="5" y1="15" x2="19" y2="15"/></svg>Saved Games</div>
+        <div class="menu-item"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>Following</div>
+        <div class="menu-item"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 8 12 12 14 14"/></svg>Continue Playing</div>
+        <div class="menu-item"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Games For You</div>
+        <div class="menu-item"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>My Bets</div>
+        <div class="menu-divider"></div>
+        <div class="menu-label">Games</div>
+        <div class="menu-item" onclick="switchTab('casino')"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/></svg>Only on Stake</div>
+        <div class="menu-item"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>New Releases</div>
+        <div class="menu-item"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>Slots</div>
+        <div class="menu-item" onclick="switchTab('casino')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8.56 2.75c4.37 6.03 6.02 9.42 8.03 17.72m2.54-15.38c-3.72 4.35-8.94 5.66-16.88 5.85m19.5 1.9c-3.5-.93-6.63-.82-8.94 0-2.58.92-5.01 2.86-7.44 6.32"/></svg>Stake Originals</div>
+        <div class="menu-item"><svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>Live Casino</div>
+        <div class="menu-item"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Table Games</div>
+        <div class="menu-item"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>Game Shows</div>
+      </div>
+    </div>
+
+    <!-- CASINO -->
+    <div id="screen-casino" class="screen">
+      <div class="featured-banner">
+        <div>
+          <div class="featured-tag">Only on Stake</div>
+          <div class="featured-title">Fat Fruits</div>
+          <div class="featured-sub">Juicy Wins Inside</div>
+          <button class="btn-play" onclick="toast('Login to play Fat Fruits!')">Play Now!</button>
+        </div>
+        <div class="featured-img">🍉</div>
+      </div>
+
+      <div class="search-bar" style="margin:0 16px 14px;">
+        <div class="search-icon"><svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" fill="none" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
+        <input type="text" placeholder="Search your game or event" readonly onclick="toast('Search available after login')">
+      </div>
+
+      <div class="horizontal-tabs">
+        <button class="htab active" onclick="setHtab(this)">
+          <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+          Casino Home
+        </button>
+        <button class="htab" onclick="setHtab(this)">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>
+          Only on Stake
+        </button>
+        <button class="htab" onclick="setHtab(this)">
+          <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+          Live Casino
+        </button>
+        <button class="htab" onclick="setHtab(this)">Slots</button>
+        <button class="htab" onclick="setHtab(this)">New</button>
+      </div>
+
+      <div class="section-header">
+        <div class="section-title">🔥 Stake Originals</div>
+        <button class="view-all" onclick="toast('View all originals')">View All</button>
+      </div>
+      <div class="originals-grid">
+        <div class="orig-card" onclick="toast('Login to play Dice')">
+          <div class="orig-thumb" style="background:linear-gradient(135deg,#6b29c7,#3d1580);">
+            🎲
+            <div class="orig-name">DICE<br><span class="orig-sub">Stake Originals</span></div>
+          </div>
+        </div>
+        <div class="orig-card" onclick="toast('Login to play Mines')">
+          <div class="orig-thumb" style="background:linear-gradient(135deg,#1e7a3e,#0d4a22);">
+            💣
+            <div class="orig-name">MINES<br><span class="orig-sub">Stake Originals</span></div>
+          </div>
+        </div>
+        <div class="orig-card" onclick="toast('Login to play Plinko')">
+          <div class="orig-thumb" style="background:linear-gradient(135deg,#c77b29,#804a0d);">
+            ⚪
+            <div class="orig-name" style="font-size:10px;">PLINKO<br><span class="orig-sub">10000×</span></div>
+          </div>
+        </div>
+        <div class="orig-card" onclick="toast('Login to play Crash')">
+          <div class="orig-thumb" style="background:linear-gradient(135deg,#29a8c7,#0d6a80);">
+            🚀
+            <div class="orig-name">CRASH<br><span class="orig-sub">Stake Originals</span></div>
+          </div>
+        </div>
+        <div class="orig-card" onclick="toast('Login to play HiLo')">
+          <div class="orig-thumb" style="background:linear-gradient(135deg,#c72980,#801550);">
+            🃏
+            <div class="orig-name">HILO<br><span class="orig-sub">Stake Originals</span></div>
+          </div>
+        </div>
+        <div class="orig-card" onclick="toast('Login to play Limbo')">
+          <div class="orig-thumb" style="background:linear-gradient(135deg,#8f1a8f,#5e0d5e);">
+            🌌
+            <div class="orig-name">LIMBO<br><span class="orig-sub">Stake Originals</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-header" style="margin-top:8px;">
+        <div class="section-title">⚡ New Releases</div>
+        <button class="view-all">View All</button>
+      </div>
+      <div class="games-scroll" style="margin-bottom:24px;">
+        <div class="game-card" onclick="toast('Login to play')"><div class="game-thumb" style="background:linear-gradient(135deg,#8b1a1a,#4a0d0d);">🍎</div><div class="game-card-name">Fat Fruits</div></div>
+        <div class="game-card" onclick="toast('Login to play')"><div class="game-thumb" style="background:linear-gradient(135deg,#1a4f8f,#0d2d5e);">🦁</div><div class="game-card-name">Lion's Roar</div></div>
+        <div class="game-card" onclick="toast('Login to play')"><div class="game-thumb" style="background:linear-gradient(135deg,#4a8f1a,#2d5e0d);">🌊</div><div class="game-card-name">Big Bass</div></div>
+        <div class="game-card" onclick="toast('Login to play')"><div class="game-thumb" style="background:linear-gradient(135deg,#8f6b1a,#5e430d);">🏺</div><div class="game-card-name">Book of Ra</div></div>
+        <div class="game-card" onclick="toast('Login to play')"><div class="game-thumb" style="background:linear-gradient(135deg,#1a8f8f,#0d5e5e);">🐬</div><div class="game-card-name">Dolphin</div></div>
+      </div>
+    </div>
+
+    <!-- SPORTS (BET SLIP) -->
+    <div id="screen-bets" class="screen">
+      <div class="betslip-top">
+        <div class="betslip-left">
+          <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          <span class="betslip-title">Bet Slip</span>
+          <span class="caret"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></span>
+        </div>
+        <div class="betslip-icons">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+          <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </div>
+      </div>
+      <div class="empty-state">
+        <div class="empty-icon">📋⚽</div>
+        <div class="empty-title">Bet Slip is Empty</div>
+        <div class="empty-sub">Use Bet Code</div>
+      </div>
+      <div class="betslip-footer">
+        <div class="betslip-row">
+          <span>Total Stake</span>
+          <span>$0.00 <div class="tron-badge">₮</div></span>
+        </div>
+        <div class="betslip-row">
+          <span>Est. Payout</span>
+          <span>$0.00 <div class="tron-badge">₮</div></span>
+        </div>
+        <button class="btn-register-bet" onclick="toast('Register to place bets!')">Register to Bet</button>
+      </div>
+    </div>
+
+    <!-- SPORTS -->
+    <div id="screen-sports" class="screen">
+      <div class="sports-banner">
+        <div>
+          <div style="font-size:12px;color:var(--text2);margin-bottom:4px;">Add 3+ legs to enable</div>
+          <div style="font-size:18px;font-weight:700;color:#fff;margin-bottom:10px;">Stake Shield</div>
+          <button class="btn-play" onclick="toast('View Stake Shield info')">View More Info</button>
+        </div>
+        <div style="font-size:72px;">🛡️</div>
+      </div>
+
+      <div class="search-bar" style="margin:0 16px 14px;">
+        <div class="search-icon"><svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" fill="none" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
+        <input type="text" placeholder="Search your game or event" readonly>
+      </div>
+
+      <div class="horizontal-tabs">
+        <button class="htab active" onclick="setHtab(this)">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          Sports Home
+        </button>
+        <button class="htab" onclick="setHtab(this)">
+          <svg viewBox="0 0 24 24"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+          Live Betting
+        </button>
+        <button class="htab" onclick="setHtab(this)">
+          <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
+          My Bets
+        </button>
+      </div>
+
+      <div class="section-header">
+        <div class="section-title">💰 Top Matches</div>
+        <div style="display:flex;gap:6px;">
+          <button style="background:var(--bg3);border:1px solid var(--border);color:var(--text2);padding:6px 10px;border-radius:6px;cursor:pointer;font-size:16px;">‹</button>
+          <button style="background:var(--bg3);border:1px solid var(--border);color:var(--text2);padding:6px 10px;border-radius:6px;cursor:pointer;font-size:16px;">›</button>
+        </div>
+      </div>
+
+      <div class="match-card">
+        <div class="match-header">
+          <span class="match-time">3h</span>
+          <div class="match-tags">
+            <span class="match-tag">📈</span>
+            <span class="match-tag">SGM</span>
+          </div>
+          <div class="match-viewers">
+            <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            30,571
+          </div>
+        </div>
+        <div class="match-body">
+          <div class="match-teams">
+            <div class="team">
+              <div class="team-badge">🔵</div>
+              <div class="team-name">Man City</div>
+            </div>
+            <div class="vs">vs</div>
+            <div class="team">
+              <div class="team-name">Brentford</div>
+              <div class="team-badge">🔴</div>
+            </div>
+          </div>
+          <div class="match-hot">🔥🔥 97% of 1x2 bets on Manchester City</div>
+          <div class="match-odds">
+            <div class="odds-btn" onclick="toast('Login to bet on Man City')">
+              <div class="odds-label">Manchester...</div>
+              <div class="odds-val">1.39</div>
+            </div>
+            <div class="odds-btn" onclick="toast('Login to bet on Draw')">
+              <div class="odds-label">Draw</div>
+              <div class="odds-val">5.60</div>
+            </div>
+            <div class="odds-btn" onclick="toast('Login to bet on Brentford')">
+              <div class="odds-label">Brentford</div>
+              <div class="odds-val">7.00</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="match-card" style="margin-top:10px;">
+        <div class="match-header">
+          <span class="match-time">5h</span>
+          <div class="match-tags"><span class="match-tag">SGM</span></div>
+          <div class="match-viewers">
+            <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" fill="none" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+            18,442
+          </div>
+        </div>
+        <div class="match-body">
+          <div class="match-teams">
+            <div class="team"><div class="team-badge">🟡</div><div class="team-name">Chelsea</div></div>
+            <div class="vs">vs</div>
+            <div class="team"><div class="team-name">Arsenal</div><div class="team-badge">🔴</div></div>
+          </div>
+          <div class="match-hot">🔥 68% of bets on Arsenal</div>
+          <div class="match-odds">
+            <div class="odds-btn" onclick="toast('Login to bet')"><div class="odds-label">Chelsea</div><div class="odds-val">3.10</div></div>
+            <div class="odds-btn" onclick="toast('Login to bet')"><div class="odds-label">Draw</div><div class="odds-val">3.40</div></div>
+            <div class="odds-btn" onclick="toast('Login to bet')"><div class="odds-label">Arsenal</div><div class="odds-val">2.20</div></div>
+          </div>
+        </div>
+      </div>
+      <div style="height:20px;"></div>
+    </div>
+
+    <!-- CHAT -->
+    <div id="screen-chat" class="screen">
+      <div class="chat-header">
+        <div class="chat-region">
+          🇮🇳 India
+          <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="chat-close"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+      </div>
+      <div class="chat-messages" id="chat-msgs">
+        <div class="chat-msg"><span class="msg-author star">Charcoalgrey24:</span> next weekly bonus kab ayega ab???? 😭😭😭</div>
+        <div class="chat-msg"><span class="msg-author star">Mh1317ch:</span> <span class="msg-mention">@Subu88</span> bhyia gud evening,, bhyia filhaal monthly ka wait weekly ke liye wager nhi kiya monthly se hoga</div>
+        <div class="chat-msg"><span class="msg-author star">Pj2212:</span> Sala weekly aaya or stake ne vapse bhi le liya</div>
+        <div class="chat-msg"><span class="msg-author">Azayyyyy:</span> <span class="msg-mention">@Titookumar</span> ipl? kitna x ka multi?</div>
+        <div class="chat-msg"><span class="msg-author star">Krishnakag15:</span> <span class="msg-mention">@Subu88</span> bhut kam aaya yrr</div>
+        <div class="chat-msg"><span class="msg-author">Simmba25:</span> <span class="msg-mention">@Titookumar</span> main bata dunga bs aap dekhlo bhai 🐢</div>
+        <div class="chat-msg"><span class="msg-author star">RajKumar_vip:</span> bhai koi batao kab aayega weekly 😤</div>
+        <div class="chat-msg"><span class="msg-author">CryptoKing_88:</span> <span class="msg-mention">@RajKumar_vip</span> monday ko aata hai bhai</div>
+        <div class="chat-msg"><span class="msg-author star">DiamondPlayer:</span> yaar aaj achha din raha 🎉 mines mein 50x mila</div>
+        <div class="chat-msg"><span class="msg-author">LuckyStrike99:</span> bhai konsa game khel rahe ho? tips do kuch</div>
+      </div>
+      <div class="chat-input-area">
+        <div class="chat-input-row">
+          <input type="text" placeholder="Type your message" id="chat-input" maxlength="160" oninput="document.getElementById('char-c').textContent=this.value.length">
+          <span class="emoji-btn">😊</span>
+        </div>
+        <div class="chat-footer">
+          <div class="online-count">
+            <div class="online-dot"></div>
+            Online: 147,759
+          </div>
+          <span class="char-count" id="char-c">0</span>
+          <div class="chat-actions">
+            <div class="chat-bet-btn">
+              <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            </div>
+            <button class="btn-send" onclick="sendChat()">Send</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end screens -->
+
+  <!-- BOTTOM NAV -->
+  <nav class="bottom-nav">
+    <button class="nav-item" id="nav-browse" onclick="switchTab('browse')">
+      <svg viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      Browse
+    </button>
+    <button class="nav-item active" id="nav-home" onclick="switchTab('home')">
+      <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      Casino
+    </button>
+    <button class="nav-item" id="nav-bets" onclick="switchTab('bets')">
+      <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      Bets
+    </button>
+    <button class="nav-item" id="nav-sports" onclick="switchTab('sports')">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+      Sports
+    </button>
+    <button class="nav-item" id="nav-chat" onclick="switchTab('chat')">
+      <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      Chat
+    </button>
+  </nav>
+</div>
+
+<div class="toast" id="toast-el"></div>
+
+<script>
+const screens = ['home','browse','casino','bets','sports','chat'];
+
+function switchTab(name) {
+  screens.forEach(s => {
+    const sc = document.getElementById('screen-'+s);
+    const nav = document.getElementById('nav-'+s);
+    if (sc) {
+      sc.classList.remove('active');
+    }
+    if (nav) nav.classList.remove('active');
+  });
+  const target = document.getElementById('screen-'+name);
+  if (target) target.classList.add('active');
+  // map tab names to nav ids
+  const navMap = {home:'home',browse:'browse',casino:'home',bets:'bets',sports:'sports',chat:'chat'};
+  const navEl = document.getElementById('nav-'+(navMap[name]||name));
+  if (navEl) navEl.classList.add('active');
+  // scroll to top
+  if (target && name!=='chat') target.scrollTop=0;
+  // scroll chat to bottom
+  if (name==='chat') {
+    setTimeout(()=>{
+      const msgs=document.getElementById('chat-msgs');
+      if(msgs) msgs.scrollTop=msgs.scrollHeight;
+    },50);
+  }
+}
+
+function setHtab(el) {
+  const parent = el.closest('.horizontal-tabs');
+  parent.querySelectorAll('.htab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function toast(msg) {
+  const t = document.getElementById('toast-el');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+function sendChat() {
+  const inp = document.getElementById('chat-input');
+  const val = inp.value.trim();
+  if (!val) { toast('Login to send messages!'); return; }
+  const msgs = document.getElementById('chat-msgs');
+  const el = document.createElement('div');
+  el.className = 'chat-msg';
+  el.innerHTML = '<span class="msg-author">You:</span> ' + val.replace(/</g,'&lt;');
+  msgs.appendChild(el);
+  inp.value = '';
+  document.getElementById('char-c').textContent = '0';
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+// Splash hide after load
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    document.getElementById('splash').classList.add('hide');
+    setTimeout(() => document.getElementById('splash').remove(), 600);
+  }, 1800);
+});
+</script>
+</body>
+</html>
